@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
+using System;
 using System.IO;
 
 namespace SqlTestConsole.NotificationError
@@ -20,20 +21,27 @@ namespace SqlTestConsole.NotificationError
                 fileNotificationErrorOptions.DirBase,
                 fileNotificationErrorOptions.FileName);
         }
+
+        public void SendException(Exception exc, SqlSourceDto sqlSourceDto, int errorNum)
+        {
+            Send(sqlSourceDto.QueryName, exc.Message, errorNum);
+        }
         public void Send(SqlSourceDto sqlSourceDto, int errorNum)
         {
+            Send(sqlSourceDto.QueryName, sqlSourceDto.Query, errorNum);
+        }
+        public void Send(string queryName, string content, int errorNum)
+        {
             string path = $"{_dirBase}/{_fileName}_{errorNum}.txt";
-
 
             if (File.Exists(path))
             {
                 File.Delete(path);
             }
-
             // Create a file to write to.
             using StreamWriter sw = File.CreateText(path);
-            sw.WriteLine(sqlSourceDto.QueryName);
-            sw.WriteLine(sqlSourceDto.Query);
+            sw.WriteLine($"--{queryName}");
+            sw.WriteLine(content);
         }
     }
 }
