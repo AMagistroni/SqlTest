@@ -6,19 +6,12 @@ using System.Data.SqlClient;
 
 namespace SqlTestConsole
 {
-    public class SqlTestConsoleManager
+    public class SqlTestConsoleManager(ISqlSourceProvider sqlSourceProvider, INotificationError notificationError, string connectionString, ILogger logger)
     {
-        private readonly ISqlSourceProvider _sqlSourceProvider;
-        private readonly INotificationError _notificationError;
-        private readonly string _connectionString;
-        private readonly ILogger _logger;
-        public SqlTestConsoleManager(ISqlSourceProvider sqlSourceProvider, INotificationError notificationError, string connectionString, ILogger logger)
-        {
-            _sqlSourceProvider = sqlSourceProvider;
-            _logger = logger;
-            _connectionString = connectionString;
-            _notificationError = notificationError;
-        }
+        private readonly ISqlSourceProvider _sqlSourceProvider = sqlSourceProvider;
+        private readonly INotificationError _notificationError = notificationError;
+        private readonly string _connectionString = connectionString;
+        private readonly ILogger _logger = logger;
 
         public void TestQuery()
         {
